@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-backend"
+version = "0.1.0"
+description = "Aegis: Runtime Security Framework for Autonomous AI Agents — backend"
+requires-python = ">=3.12"
+authors = [{ name = "Aegis Project" }]
+license = { text = "MIT" }
+dependencies = [
+  "fastapi==0.115.2",
+  "uvicorn[standard]==0.30.6",
+  "pydantic[email]==2.13.5",
+  "pydantic-settings==2.15.0",
+  "SQLAlchemy[asyncio]==2.1.3",
+  "asyncpg==0.31.0",
+  "alembic==1.15.2",
+  "argon2-cffi==23.1.0",
+  "PyJWT==2.10.1",
+  "cryptography==44.0.1",
+  "httpx==0.28.1",
+  "slowapi==0.1.10",
+  "limits==3.13.0",
+  "websockets==14.1",
+  "python-dotenv==1.2.4",
+  "psutil==6.1.0",
+  "click==8.2.0",
+  "email-validator==2.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.5",
+  "pytest-asyncio==0.25.0",
+  "pytest-cov==6.0.0",
+  "respx==0.21.1",
+  "aiofiles==24.1.0",
+  "testcontainers[postgresql]==4.9.0",
+]
+
+[project.scripts]
+aegis-create-admin = "app.scripts.create_admin:cli"
+aegis-verify-audit-chain = "app.scripts.verify_audit_chain:cli"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+exclude = ["tests*", "alembic*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+  "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+  "security: marks security-specific tests",
+  "integration: marks integration tests",
+  "e2e: marks end-to-end tests",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = [
+  "app/tests/*",
+  "tests/*",
+  "app/scripts/*",
+  "*/alembic/*",
+]
